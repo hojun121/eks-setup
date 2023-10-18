@@ -1,0 +1,66 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-jckim
+  region: ap-northeast-2
+  version: "1.26"  
+vpc: 
+  id: vpc-07f60d54c50c55d97
+  subnets:
+    public:
+      PublicSubnet01:
+        az: ap-northeast-2a
+        id: subnet-0cbf1904ec32dadc5
+      PublicSubnet02:
+        az: ap-northeast-2b
+        id: subnet-05527dd705a772564
+      PublicSubnet03:
+        az: ap-northeast-2c
+        id: subnet-0695f0f8b1d2f38f0
+    private:
+      PrivateSubnet01:
+        az: ap-northeast-2a
+        id: subnet-00ed5d84bd610f9b2
+      PrivateSubnet02:
+        az: ap-northeast-2b
+        id: subnet-0dc89a4f31de1da2d
+      PrivateSubnet03:
+        az: ap-northeast-2c
+        id: subnet-0fecca9b3576298ee
+secretsEncryption:
+  keyARN: arn:aws:kms:ap-northeast-2:308146511470:key/aa88c47d-35a5-4b2b-8d65-9463e7b00f11
+
+
+managedNodeGroups:
+  - name: managed-ng-private-01
+    instanceType: m5.xlarge
+    subnets:
+      - subnet-00ed5d84bd610f9b2
+      - subnet-0dc89a4f31de1da2d
+      - subnet-0fecca9b3576298ee
+    desiredCapacity: 3
+    privateNetworking: true
+    minSize: 3
+    maxSize: 9
+    volumeSize: 200
+    volumeType: gp3
+    volumeEncrypted: true
+    amiFamily: AmazonLinux2
+    labels:
+      nodegroup-type: "managed-backend-workloads"
+    ssh: 
+      publicKeyPath: "/home/ec2-user/environment/eks-jckim.pub"
+    iam:
+      attachPolicyARNs:
+      withAddonPolicies:
+        autoScaler: true
+        cloudWatch: true
+        ebs: true
+        fsx: true
+        efs: true
+        
+cloudWatch:
+    clusterLogging:
+        enableTypes: ["api", "audit", "authenticator", "controllerManager", "scheduler"]
