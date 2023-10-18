@@ -5,29 +5,25 @@ stack_name=$1
 echo stack_name: $stack_name
 
 # Export VPC id
-export vpc_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=$stack_name | jq -r '.Vpcs[].VpcId')
-echo vpc_id: $vpc_ID
+#export vpc_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=$stack_name | jq -r '.Vpcs[].VpcId')
+#echo vpc_id: $vpc_ID
 
 # Export Subnet id, CIDR, Subnet Name
-aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)'
-echo $vpc_ID > vpc_subnet.txt
-aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' >> vpc_subnet.txt
-cat vpc_subnet.txt
+#aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)'
+#echo $vpc_ID > vpc_subnet.txt
+#aws ec2 describe-subnets --filter Name=vpc-id,Values=$vpc_ID | jq -r '.Subnets[]|.SubnetId+" "+.CidrBlock+" "+(.Tags[]|select(.Key=="Name").Value)' >> vpc_subnet.txt
+#cat vpc_subnet.txt
 
 # Save environment variable for VPC, Subnet id
 export PublicSubnet01=$(aws ec2 describe-subnets --filters 'Name=tag:Name,Values='"$stack_name"'-PublicSubnet01' | jq -r '.Subnets[].SubnetId')
 export PublicSubnet02=$(aws ec2 describe-subnets --filters 'Name=tag:Name,Values='"$stack_name"'-PublicSubnet02' | jq -r '.Subnets[].SubnetId')
-export PublicSubnet03=$(aws ec2 describe-subnets --filters 'Name=tag:Name,Values='"$stack_name"'-PublicSubnet03' | jq -r '.Subnets[].SubnetId')
 export PrivateSubnet01=$(aws ec2 describe-subnets --filters 'Name=tag:Name,Values='"$stack_name"'-PrivateSubnet01' | jq -r '.Subnets[].SubnetId')
 export PrivateSubnet02=$(aws ec2 describe-subnets --filters 'Name=tag:Name,Values='"$stack_name"'-PrivateSubnet02' | jq -r '.Subnets[].SubnetId')
-export PrivateSubnet03=$(aws ec2 describe-subnets --filters 'Name=tag:Name,Values='"$stack_name"'-PrivateSubnet03' | jq -r '.Subnets[].SubnetId')
 echo "export vpc_ID=${vpc_ID}" | tee -a ~/.bash_profile
 echo "export PublicSubnet01=${PublicSubnet01}" | tee -a ~/.bash_profile
 echo "export PublicSubnet02=${PublicSubnet02}" | tee -a ~/.bash_profile
-echo "export PublicSubnet03=${PublicSubnet03}" | tee -a ~/.bash_profile
 echo "export PrivateSubnet01=${PrivateSubnet01}" | tee -a ~/.bash_profile
 echo "export PrivateSubnet02=${PrivateSubnet02}" | tee -a ~/.bash_profile
-echo "export PrivateSubnet03=${PrivateSubnet03}" | tee -a ~/.bash_profile
 
 # Create eks cluster environment 
 export ekscluster_name=$stack_name

@@ -1,0 +1,2 @@
+#!/bin/bash
+eksctl create cluster --config-file=/home/env/aws-eks/eks.yaml --dry-run

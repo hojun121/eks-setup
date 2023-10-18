@@ -2,7 +2,7 @@
 # command ./eksctl_shell.sh
 
 source ~/.bash_profile
-cat << EOF > ~/environment/aws-eks/eks.yaml
+cat << EOF > /home/env/aws-eks/eks.yaml
 ---
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
@@ -21,9 +21,6 @@ vpc:
       PublicSubnet02:
         az: ${AWS_REGION}b
         id: ${PublicSubnet02}
-      PublicSubnet03:
-        az: ${AWS_REGION}c
-        id: ${PublicSubnet03}
     private:
       PrivateSubnet01:
         az: ${AWS_REGION}a
@@ -31,9 +28,6 @@ vpc:
       PrivateSubnet02:
         az: ${AWS_REGION}b
         id: ${PrivateSubnet02}
-      PrivateSubnet03:
-        az: ${AWS_REGION}c
-        id: ${PrivateSubnet03}
 secretsEncryption:
   keyARN: ${MASTER_ARN}
 
@@ -44,11 +38,10 @@ managedNodeGroups:
     subnets:
       - ${PrivateSubnet01}
       - ${PrivateSubnet02}
-      - ${PrivateSubnet03}
-    desiredCapacity: 3
+    desiredCapacity: 2
     privateNetworking: true
-    minSize: 3
-    maxSize: 9
+    minSize: 2
+    maxSize: 6
     volumeSize: 200
     volumeType: gp3
     volumeEncrypted: true

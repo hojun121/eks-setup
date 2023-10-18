@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# IAM OIDC 자격 증명 공급자를 생성
+eksctl utils associate-iam-oidc-provider --cluster ZIGI-EKS --approve
+
+# AWS Load Balancer Controller가 AWS API 호출을 허용하는 IAM 정책 Download
+curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.3.1/docs/install/iam_policy.json
+
+# IAM 정책 생성
+aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam_policy.json 
+
+# aws-load-balancer-controller라는 Kubernetes 서비스 계정에 대한 IAM 역할을 생성
+eksctl create iamserviceaccount \
+  --cluster=pjh-vpc \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --attach-policy-arn=arn:aws:iam::273349345035:policy/AWSLoadBalancerControllerIAMPolicy \
+  --override-existing-serviceaccounts \
+  --approve
+
+# eks-charts Repo Add
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+
+# AWS LB Controller 배포
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+    -n kube-system \
+    --set clusterName=pjh-vpc \
+    --set serviceAccount.create=false \
+    --set serviceAccount.name=aws-load-balancer-controller

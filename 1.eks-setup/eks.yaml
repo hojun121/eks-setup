@@ -3,43 +3,35 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: eks-jckim
+  name: pjh-vpc
   region: ap-northeast-2
   version: "1.26"  
 vpc: 
-  id: vpc-07f60d54c50c55d97
+  id: vpc-04a7039c699756c59
   subnets:
     public:
       PublicSubnet01:
-        az: ap-northeast-2a
-        id: subnet-0cbf1904ec32dadc5
+        az: a
+        id: subnet-0c68d9f71ce7ddc72
       PublicSubnet02:
-        az: ap-northeast-2b
-        id: subnet-05527dd705a772564
-      PublicSubnet03:
-        az: ap-northeast-2c
-        id: subnet-0695f0f8b1d2f38f0
+        az: b
+        id: subnet-0c943b270afa7e9e2
     private:
       PrivateSubnet01:
-        az: ap-northeast-2a
-        id: subnet-00ed5d84bd610f9b2
+        az: a
+        id: subnet-0362af0bc82f085be
       PrivateSubnet02:
-        az: ap-northeast-2b
-        id: subnet-0dc89a4f31de1da2d
-      PrivateSubnet03:
-        az: ap-northeast-2c
-        id: subnet-0fecca9b3576298ee
+        az: b
+        id: subnet-0216f45e0f6f57cee
 secretsEncryption:
-  keyARN: arn:aws:kms:ap-northeast-2:308146511470:key/aa88c47d-35a5-4b2b-8d65-9463e7b00f11
-
+  keyARN: arn:aws:kms:ap-northeast-2:273349345035:key/a85f5fa2-252f-4acd-9271-2df96678dece
 
 managedNodeGroups:
   - name: managed-ng-private-01
     instanceType: m5.xlarge
     subnets:
-      - subnet-00ed5d84bd610f9b2
-      - subnet-0dc89a4f31de1da2d
-      - subnet-0fecca9b3576298ee
+      - subnet-0362af0bc82f085be
+      - subnet-0216f45e0f6f57cee
     desiredCapacity: 3
     privateNetworking: true
     minSize: 3
@@ -51,7 +43,7 @@ managedNodeGroups:
     labels:
       nodegroup-type: "managed-backend-workloads"
     ssh: 
-      publicKeyPath: "/home/ec2-user/environment/eks-jckim.pub"
+      publicKeyPath: "/root/.ssh/id_rsa.pub"
     iam:
       attachPolicyARNs:
       withAddonPolicies:

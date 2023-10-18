@@ -1,0 +1,5 @@
+vpc-04a7039c699756c59
+subnet-0c68d9f71ce7ddc72 192.168.0.0/18 pjh-vpc-PublicSubnet01
+subnet-0362af0bc82f085be 192.168.128.0/18 pjh-vpc-PrivateSubnet01
+subnet-0c943b270afa7e9e2 192.168.64.0/18 pjh-vpc-PublicSubnet02
+subnet-0216f45e0f6f57cee 192.168.192.0/18 pjh-vpc-PrivateSubnet02

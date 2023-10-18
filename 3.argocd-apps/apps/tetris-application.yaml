@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tetris
+  namespace: argocd
+spec:
+  project: default
+  source:
+    path: 3.argocd-apps/charts/tetris-helm
+    repoURL: https://github.com/hojun121/eks-setup.git
+    targetRevision: main
+
+  destination:
+    namespace: tetris
+    server: https://kubernetes.default.svc
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
