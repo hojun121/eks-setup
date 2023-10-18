@@ -1,2 +1,3 @@
 #!/bin/bash
-eksctl create cluster --config-file=eks.yaml --dry-run
+eksctl create cluster --config-file=eks.yaml
+eksctl create cluster --config-file=eks-2.yaml

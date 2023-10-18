@@ -1,0 +1,58 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: pjh-vpc-2
+  region: ap-northeast-2
+  version: "1.26"  
+vpc: 
+  id:   vpc-0b9a23dc7c2e4e158
+  subnets:
+    public:
+      PublicSubnet01:
+        az: a
+        id: subnet-093a99d5bc1deba83
+      PublicSubnet02:
+        az: b
+        id: subnet-04e4d30220f795843
+    private:
+      PrivateSubnet01:
+        az: a
+        id: subnet-0a3bc2892b57438d0
+      PrivateSubnet02:
+        az: b
+        id: subnet-0d5ecc859c3768a22
+secretsEncryption:
+  keyARN: arn:aws:kms:ap-northeast-2:273349345035:key/a85f5fa2-252f-4acd-9271-2df96678dece
+
+managedNodeGroups:
+  - name: managed-ng-private-01
+    instanceType: m5.xlarge
+    subnets:
+      - subnet-0a3bc2892b57438d0
+      - subnet-0d5ecc859c3768a22
+    desiredCapacity: 3
+    privateNetworking: true
+    minSize: 3
+    maxSize: 9
+    volumeSize: 200
+    volumeType: gp3
+    volumeEncrypted: true
+    amiFamily: AmazonLinux2
+    labels:
+      nodegroup-type: "managed-backend-workloads"
+    ssh: 
+      publicKeyPath: "/root/.ssh/id_rsa.pub"
+    iam:
+      attachPolicyARNs:
+      withAddonPolicies:
+        autoScaler: true
+        cloudWatch: true
+        ebs: true
+        fsx: true
+        efs: true
+        
+cloudWatch:
+    clusterLogging:
+        enableTypes: ["api", "audit", "authenticator", "controllerManager", "scheduler"]
