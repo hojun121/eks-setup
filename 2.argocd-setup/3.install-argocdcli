@@ -1,3 +1,6 @@
 #!/bin/bash
 sudo curl --silent --location -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.8.4/argocd-linux-amd64 
 sudo chmod +x /usr/local/bin/argocd
+argocd --port-forward --port-forward-namespace=argocd --grpc-web --plaintext login --username=admin --password=argocdadmin
+kubectl config get-contexts -o name
+argocd cluster add cluster_1
